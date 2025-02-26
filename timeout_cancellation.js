@@ -5,11 +5,16 @@
  * @return {Function}
  */
 var cancellable = function(fn, args, t) {
+    
+    function cancelFn() {
+        console.log(timer);
+        clearTimeout(timer);
+    };
 
-
-    return function cancelFn(){
-        console.log(arguments[0]);
-    }
+    const timer = setTimeout(() => {
+        fn(...args);
+    }, t);
+    return cancelFn;
     
 };
 
@@ -17,7 +22,7 @@ var cancellable = function(fn, args, t) {
 const result = [];
 
 const fn = (x) => x * 5;
-const args = [2], t = 20, cancelTimeMs = 50;
+const args = [2], t = 100, cancelTimeMs = 50;
 
 const start = performance.now();
 
