@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+	<html>
+	<head>
+	
+	<style>
+
+		.bar-container {
+			display: flex;
+			gap: 1rem;
+			padding: 1rem;
+		}
+		.bar {
+		transition: width 2s;
+		border: 0.3px solid;
+		border-radius: 3px;
+		font-size: 13px;
+		padding: 10px 20px;
+		margin: 2px;
+		}
+		
+		.bar.success {
+			background: rgb(225,246,215);}
+			
+		.calendar-container {
+			display: grid;
+			grid-template-columns: repeat(7, 1fr);
+			grid-template-rows: repeat(5,1fr);
+			padding: 5px;
+			background-color: rgb(225,246,215);;
+			gap: 2px;
+		}
+		
+		.days-of-week-container {
+			display: grid;
+			grid-template-columns: repeat(7, 1fr);
+			padding: 5px;
+			background-color: rgb(90,106,85);
+			gap: 2px;
+		}
+		
+		.days-of-week-container > div {
+			background-color: rgb(190,206,185);
+			border: 1px solid black;
+			margin: 2px;
+			padding: 10px;
+			font-size: 20px;
+			text-align: center;
+			aspect-ratio: 1;
+			
+		}
+		
+		
+		.calendar-container > div {
+			background-color: grey;
+			border: 1px solid black;
+			margin: 2px;
+			padding: 10px;
+			font-size: 15px;
+			text-align: center;
+			aspect-ratio: 1;
+			
+		}
+		
+
+	</style>
+	
+	
+	</head>
+		<body>
+		<div class="bar-container">
+			<div class="bar success"
+				
+				onclick="calculateCurrentMonth()">
+				Today: <span id="today"></span>
+			</div>
+			
+		</div>
+		<div class="bar-container">
+		<input placeholder="Oblicz miesiace roku" type="number" id="year">
+			<div class="bar success"
+				onclick="getDaysOfMonths">
+				Today
+			</div>
+			<div class="bar success"
+				onclick="getDaysOfMonths()">
+				getAllMonths
+			</div>
+			<div class="bar success"
+				 onclick="displayMonth()">
+			</div>
+			</div>
+
+			<div  id="div">
+			
+				
+			</div>
+			
+
+		</body> 
+
+	
+	<script>
+	
+	
+	function milisecondsToDays(data) {
+		let newDate = (data/(1000*60*60*24)).toFixed(0);
+		return newDate;
+	}
+	
+	function calculateCurrentMonth() {
+		let currentDate = new Date();
+		console.log(currentDate);
+		let currentMonth = currentDate.getMonth();
+		let currentYear = currentDate.getFullYear();
+		console.log(currentMonth, currentYear);
+		
+		let firstDayOfMonth = new Date(currentYear, currentMonth, 0)
+		let lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0 )
+		console.log(`firstDay: ${firstDayOfMonth}\n lastDay: ${lastDayOfMonth}`);
+
+		let newDate = lastDayOfMonth - firstDayOfMonth;
+		console.log(milisecondsToDays(newDate));
+	}
+	
+	function getAllMonths() {
+		let months = [];
+		for (let i=0; i <= 11; i++) {
+			months.push(i);
+		}
+		console.log(months);
+		return months;
+	}
+	
+	function getDaysOfAllMonths(year) {
+		months = getAllMonths();
+		daysOfMonthsArray = [];
+		
+		for (let month of months) {
+			let firstDayOfMonth = new Date(year, month, 0)
+			let lastDayOfMonth = new Date(year, month + 1, 0 )
+			let newDate = lastDayOfMonth - firstDayOfMonth;
+			let formattedDate = milisecondsToDays(newDate);
+			daysOfMonthsArray.push(formattedDate);
+		}
+		console.log(daysOfMonthsArray);
+		return daysOfMonthsArray;
+	}
+	
+	function describeDayOfWeek(number) {
+		if (number == 0) {
+			return 'Sunday';		
+		}
+		else if (number === 1) {
+			return 'Monday';
+		}
+		else if (number === 2) {
+			return 'Tuesday';
+		}
+		else if (number === 3) {
+			return 'Wednesday';
+		}
+		else if (number === 4) {
+			return 'Thursday';
+		}
+		else if (number === 5) {
+			return 'Friday';
+		}
+		else if (number === 6) {
+			return 'Saturday';
+		}
+	}
+	
+	let data = [];
+	
+	function createDomElement(date, monthContainer) {
+		
+		//console.log(Parsed date.day : ${date.day});
+		
+		let dayLine = document.createElement('div');
+		let dayContent = document.createTextNode(date.day);
+		console.log(`DayContent: ${dayContent}`);
+
+		dayLine.appendChild(dayContent);
+		monthContainer.appendChild(dayLine);
+		
+		var currentDiv = document.getElementById('div');
+		document.body.insertBefore(monthContainer, currentDiv);
+		
+		
+		//let monthLine = document.createElement('li');
+		//let yearLine = document.createElement('li');
+		}
+		
+	function createMonthHeader() {
+		
+	let monthHeaderDiv = document.createElement('div')
+	monthHeaderDiv.classList.add('days-of-week-container')
+	
+	
+	let daysOfMonthsArray = ["Poniedzialek", "Wtornik", "Sroda", "Czwartek", "Piatek","Sobota","Niedziela"];
+	
+	for (let day of daysOfMonthsArray) {
+		console.log(`Day : ${day}`);
+		let newDayElement = document.createElement('div');
+		let dayDayContent = document.createTextNode(day);
+		
+		console.log(newDayElement);
+		newDayElement.appendChild(dayDayContent);
+		monthHeaderDiv.appendChild(newDayElement);
+		document.body.appendChild(monthHeaderDiv);		
+		
+	}
+	
+	return monthHeaderDiv;
+
+		
+	}
+		
+	function createMonthContainer() {
+	
+		let monthContainer = document.createElement('div');
+		monthContainer.classList.add('calendar-container');
+		return monthContainer;
+		
+	}
+	
+	
+	function getDaysOfMonths() {
+	
+	let daysOfMonthsArray = getDaysOfAllMonths(1994);
+	console.log(`Daysof the months array: ${daysOfMonthsArray[0]}`);
+	
+	daysOfMonthsArray.forEach((value,index) => {
+		//console.log(Value: ${value});
+		//console.log(Month : ${index+1});
+		//Array of months? 
+		for (i=0; i < value; i++)
+		{
+			//console.log(i);
+			let date = new Date(1994, index, i+1);
+			let newDate = createDateStructure(date);
+			data.push(newDate);
+			
+		}
+	});
+	 //print out the data
+	 
+	 /*
+	for (let newDate of data) {
+		console.log(newDate.day);
+	} */
+	return data;
+	}
+	
+	function checkFirstDayOfMonth(month) {
+		let day = month[0].dayOfWeek;
+		//console.log(day);
+		//console.log(First day: ${day.dayOfWeek});
+		return day-1;
+	
+	}
+	
+	function displayMonth() {
+		dates = getDaysOfMonths();
+		console.log(dates);
+		
+		monthContainer = createMonthContainer()
+		monthHeader =  createMonthHeader();
+		const months = Array.from({length: 12}, () => []);
+		
+		
+			
+		dates.forEach(day => {
+			//console.log(day.month);
+			//console.log(day.dayOfWeek);
+			months[day.month].push(day);
+		})
+		
+		console.log(months);
+		let emptyDay = {
+				day: "",
+				dayOfWeek: 0,
+				month: 0,
+				year: 0,
+				hours: 0,
+				minutes: 0,
+				seconds: 0,
+			};
+		
+		for (let month of months) {
+			//console.log(Month: ${month});
+			
+			monthContainer = createMonthContainer();
+			
+			let delay = checkFirstDayOfMonth(month);
+
+			
+			for(i=0; i < delay; i++) {
+						//console.log(Fire empty Day: ${emptyDay});
+						createDomElement(emptyDay, monthContainer);
+					}
+			for (let day of month) {
+				
+				//console.log(Delay: ${delay});
+				//console.log(Day: ${day})
+				createDomElement(day, monthContainer);
+				//every day
+			}
+		}
+	}
+	
+	function createDateStructure(date) {
+	
+			//creating the Date structure for further loop
+			//console.log(Date in createDateStructure: ${date});
+			let month = date.getMonth();
+			let day = date.getDate();
+			let year = date.getYear();
+			let hours = date.getHours();
+			let minutes = date.getMinutes();
+			let seconds = date.getSeconds();
+			let dayOfWeek = date.getDay();
+
+			let newDate = {
+				day: day,
+				dayOfWeek: dayOfWeek,
+				month: month,
+				year: year,
+				hours: hours,
+				minutes: minutes,
+				seconds: seconds,
+			};
+			//console.log(newDate by getDate: \nDay:${newDate.day}\nMonth:${newDate.month}\nYear:${newDate.year});
+			return newDate;		
+	}
+	
+	
+	
+	
+	
+		
+
+	</script>
+		</html>
